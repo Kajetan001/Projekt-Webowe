@@ -7,15 +7,45 @@ import { navigationLinks } from "../../config/navigationLinks";
 import { useEffect, useState } from "react";
 
 export const OrdersPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({
+    orders: [],
+    customers: [],
+    products: []
+  });
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/orders")
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data)
-      });
+    const fetchData = async () => {
+        const [ordersResponse, customersResponse, productsResponse] = await Promise.all([
+          fetch("http://127.0.0.1:8000/orders").then((response) => response.json()),
+          fetch("http://127.0.0.1:8000/customers").then((response) => response.json()),
+          fetch("http://127.0.0.1:8000/products").then((response) => response.json())
+        ]);
+  
+        setData((prevState) => ({
+          ...prevState,
+          orders: ordersResponse,
+          customers: customersResponse,
+          products: productsResponse
+        }));
+    };
+  
+    fetchData();
+    console.log(data.orders)
   }, []);
+
+  const updatedOrders = data.orders.map((order) => {
+    const matchingProduct = data.products.find((product) => product.id === order.product_id);
+    const matchingCustomer = data.customers.find((customer) => customer.id === order.customer_id);
+  
+    if (matchingProduct) {
+      order = { ...order, product_name: matchingProduct.name };
+    }
+    if (matchingCustomer) {
+      order = { ...order, customer_name: matchingCustomer.name + " " + matchingCustomer.surname};
+    }
+  
+    return order;
+  });
   
   
   return (
@@ -34,7 +64,7 @@ export const OrdersPage = () => {
         </div>
         <div className="hidden h-full flex-1 flex-col space-y-8 md:flex">
           <DataTable
-            data={data}
+            data={updatedOrders}
             columns={Columns}
           />
         </div>

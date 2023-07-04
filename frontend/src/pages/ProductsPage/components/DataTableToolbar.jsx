@@ -17,7 +17,7 @@ export function DataTableToolbar({ table }) {
       </div>
       <div className="flex items-center space-x-2">
         <DataTableViewOptions table={table} />
-        <a href="/add-customer">Add Customer +</a>
+        <a href="/add-product">Add Product +</a>
       </div>
     </div>
   );

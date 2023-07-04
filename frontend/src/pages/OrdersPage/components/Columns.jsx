@@ -68,6 +68,17 @@ export const Columns = [
     
   },
   {
+    accessorKey: "customer_name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Customer Name" />
+    ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("customer_name")}</div>,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+    
+  }, 
+  {
     accessorKey: "product_id",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Product ID" />
@@ -79,6 +90,17 @@ export const Columns = [
         </div>
       );
     },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+    
+  },
+  {
+    accessorKey: "product_name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Product Name" />
+    ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("product_name")}</div>,
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
