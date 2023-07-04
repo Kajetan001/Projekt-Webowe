@@ -8,11 +8,14 @@ router = APIRouter()
 
 CUSTOMERS_STORAGE = get_customers_storage()
 
+def biggest_element(key_list: list):
+    list = key_list
+    list.sort(reverse=True)
+    return list[0]
 
 @router.get("/")
 async def get_customers() -> list[Customer]:
     return list(get_customers_storage().values())
-
 
 @router.get("/{customer_id}")
 async def get_customer(customer_id: int) -> Customer:
@@ -23,13 +26,20 @@ async def get_customer(customer_id: int) -> Customer:
             status_code=404, detail=f"Customer with ID={customer_id} does not exist."
         )
 
-#ඞඞ
 @router.patch("/{customer_id}")
 async def update_customer(
     customer_id: int, updated_customer: CustomerUpdateSchema
 ) -> Customer:
     try:
-        CUSTOMERS_STORAGE[customer_id] = Customer(**(CUSTOMERS_STORAGE[customer_id].dict() | updated_customer.dict(exclude_unset=True)))
+        if updated_customer.name:
+            CUSTOMERS_STORAGE[customer_id].name = updated_customer.name
+        if updated_customer.surname:
+            CUSTOMERS_STORAGE[customer_id].surname = updated_customer.surname
+        if updated_customer.email:
+            CUSTOMERS_STORAGE[customer_id].email = updated_customer.email
+        if updated_customer.phone_number:
+            CUSTOMERS_STORAGE[customer_id].phone_number = updated_customer.phone_number
+
         return CUSTOMERS_STORAGE[customer_id]
     except KeyError:
         raise HTTPException(
@@ -46,11 +56,10 @@ async def delete_customer(customer_id: int) -> None:
             status_code=404, detail=f"Customer with ID={customer_id} does not exist."
         )
 
-#ඞ
 @router.post("/")
 async def create_customer(customer: CustomerCreateSchema) -> Customer:
-    index = len(CUSTOMERS_STORAGE)
-    CUSTOMERS_STORAGE[index] = Customer(id=index, **customer.dict())
+    id = biggest_element(list(CUSTOMERS_STORAGE.keys())) + 1 if CUSTOMERS_STORAGE else 0
+    CUSTOMERS_STORAGE[id] = Customer(**customer.dict(), id=id)
 
-    return CUSTOMERS_STORAGE[index]
+    return CUSTOMERS_STORAGE[id]
 

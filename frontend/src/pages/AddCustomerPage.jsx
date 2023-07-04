@@ -4,8 +4,7 @@ import { Input } from "@/components/ui/Input";
 import { Form } from "@/components/ui/Form";
 import { Button } from "@/components/ui/Button";
 import { UserNav } from "./CustomersPage/components/UserNav";
-import { useEffect, useState } from "react";
-import { SelectScrollUpButton } from "@radix-ui/react-select";
+import { useState } from "react";
 
 export const AddCustomerPage = () => {
   const [name, setName] = useState("")
@@ -13,9 +12,7 @@ export const AddCustomerPage = () => {
   const [email, setEmail] = useState("")
   const [phone_number, setPhoneNumber] = useState("")
 
-  const submit = (e) => {
-    e.preventDefault();
-    
+  const submit = () => {   
     fetch("http://127.0.0.1:8000/customers/" , {
       method:"POST",
       headers: {
@@ -23,7 +20,6 @@ export const AddCustomerPage = () => {
       },
       body: JSON.stringify({"name":name, "surname":surname, "email":email, "phone_number":phone_number})
     }).then((response) => response.json())
-
     setName("")
     setSurname("")
     setEmail("")
@@ -46,10 +42,10 @@ export const AddCustomerPage = () => {
         </div>
         <div className="hidden h-full flex-1 flex-col space-y-8 md:flex">
           <Form>
-            <Input value={name} onChange={(e) => setName(e.target.value)} type="text" name="name" placeholder="Name"/>
-            <Input value={surname} onChange={(e) => setSurname(e.target.value)} type="text" name="surname" placeholder="Surname"/>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} type="text" name="email" placeholder="Email"/>
-            <Input value={phone_number} onChange={(e) => setPhoneNumber(e.target.value)} type="text" name="phone_number" placeholder="Phone Number"/>
+            <Input value={name} onChange={(customer) => setName(customer.target.value)} name="name" placeholder="Name"/>
+            <Input value={surname} onChange={(customer) => setSurname(customer.target.value)} name="surname" placeholder="Surname"/>
+            <Input value={email} onChange={(customer) => setEmail(customer.target.value)} name="email" placeholder="Email"/>
+            <Input value={phone_number} onChange={(customer) => setPhoneNumber(customer.target.value)} name="phone_number" placeholder="Phone Number"/>
             <Button type="submit" onClick = {submit}>Add</Button>
           </Form>
         </div>

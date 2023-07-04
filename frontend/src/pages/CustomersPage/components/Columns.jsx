@@ -29,9 +29,18 @@ export const Columns = [
   {
     accessorKey: "name",
     header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="" />
+    ),
+    cell: ({ row }) => {row.getValue("name")},
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
+    accessorKey: "surname",
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fullname" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("name") + row.getValue("surname")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("name") + " " + row.getValue("surname")}</div>,
     enableSorting: false,
     enableHiding: false,
   },

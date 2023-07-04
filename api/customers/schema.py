@@ -26,8 +26,8 @@ class CustomerUpdateSchema(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "name": "Jan",
-                "surname": "Kowalski"
+                "name": "Michał",
+                "surname": "Wiśniewski"
             }
         }
 
